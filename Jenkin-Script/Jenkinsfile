@@ -1,0 +1,38 @@
+pipeline {
+    agent {
+        docker {
+            image 'maven:3.9.4-eclipse-temurin-17-alpine' 
+            args '-v /root/.m2:/root/.m2' 
+        }
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+				dir('D:\DemoTrade\springboot-thymeleaf-crud-pagination-sorting-webapp-master') {
+					checkout scm
+				}
+            }
+        }
+		stage('Build') {
+            steps {
+				dir('$WORKSPACE\springboot-thymeleaf-crud-pagination-sorting-webapp-master') {
+					sh 'mvn clean install package' 
+				}
+            }
+        }
+		stage('Test') {
+            steps {
+				dir('$WORKSPACE\springboot-thymeleaf-crud-pagination-sorting-webapp-master') {
+					sh 'mvn test' 
+				}
+            }
+        }
+		stage('Deploy') {
+            steps {
+				dir('$WORKSPACE\springboot-thymeleaf-crud-pagination-sorting-webapp-master') {
+					sh 'mvn deploy' 
+				}
+            }
+        }
+    }
+}
